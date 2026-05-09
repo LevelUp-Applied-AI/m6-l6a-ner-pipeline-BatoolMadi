@@ -5,3 +5,6 @@ pandas
 numpy<2
 pytest
 sentencepiece
+scikit-learn
+seaborn 
+matplotlib 
