@@ -5,3 +5,4 @@ pandas
 numpy<2
 pytest
 sentencepiece
+unicodedata
