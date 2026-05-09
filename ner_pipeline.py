@@ -164,20 +164,44 @@ def extract_hf_entities(df, ner_pipeline):
 
         ents = ner_pipeline(row["text"])
 
+        merged_entities = []
+
+        current = None
+
         for ent in ents:
+
+            word = ent["word"]
 
             label = ent["entity"]
 
             if label.startswith("B-") or label.startswith("I-"):
                 label = label[2:]
 
-            rows.append({
-                "text_id": row["id"],
-                "entity_text": ent["word"],
-                "entity_label": label,
-                "start_char": ent["start"],
-                "end_char": ent["end"]
-            })
+            # Merge subword tokens
+            if word.startswith("##"):
+
+                if current is not None:
+
+                    current["entity_text"] += word[2:]
+                    current["end_char"] = ent["end"]
+
+            else:
+
+                if current is not None:
+                    merged_entities.append(current)
+
+                current = {
+                    "text_id": row["id"],
+                    "entity_text": word,
+                    "entity_label": label,
+                    "start_char": ent["start"],
+                    "end_char": ent["end"]
+                }
+
+        if current is not None:
+            merged_entities.append(current)
+
+        rows.extend(merged_entities)
 
     return pd.DataFrame(rows)
 
