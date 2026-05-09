@@ -4,3 +4,7 @@ transformers>=4.30,<4.50
 pandas
 numpy<2
 pytest
+sentencepiece
+scikit-learn
+seaborn 
+matplotlib 
